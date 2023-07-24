@@ -120,7 +120,7 @@ public class EnhancedAESApp extends Application {
             e.printStackTrace();
         }
     }
-
+//decryption
 private void decrypt() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
      String plaintext = plaintextArea.getText();
     String key = keyArea.getText();
