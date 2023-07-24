@@ -74,22 +74,38 @@ public class EnhancedAES {
 
         return ciphertext;
     }
-
+//substitue first and then permute 
     public static byte[] decrypt(byte[] ciphertext, byte[] key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
-        SecretKey secretKey = expandKey(key);
+    SecretKey secretKey = expandKey(key);
 
-        // Use AES/GCM for decryption
-        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-        byte[] iv = new byte[12]; // 12 bytes IV for GCM
-        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(128, iv); // 128-bit authentication tag length
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParameterSpec);
+    // Use AES/GCM for decryption
+    Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+    byte[] iv = new byte[12]; // 12 bytes IV for GCM
+    GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(128, iv); // 128-bit authentication tag length
+    cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParameterSpec);
 
-        byte[] decrypted = cipher.doFinal(ciphertext);
+    // Reverse the order of operations: first substitute, then permute
+    byte[] decrypted = cipher.doFinal(ciphertext);
+    substitute(decrypted);
+    permute(decrypted);
 
-        // Apply permutation and substitution after decryption
-        permute(decrypted);
-        substitute(decrypted);
-
-        return decrypted;
-    }
+    return decrypted;
+}
+//    public static byte[] decrypt(byte[] ciphertext, byte[] key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+//        SecretKey secretKey = expandKey(key);
+//
+//        // Use AES/GCM for decryption
+//        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+//        byte[] iv = new byte[12]; // 12 bytes IV for GCM
+//        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(128, iv); // 128-bit authentication tag length
+//        cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParameterSpec);
+//
+//        byte[] decrypted = cipher.doFinal(ciphertext);
+//
+//        // Apply permutation and substitution after decryption
+//        permute(decrypted);
+//        substitute(decrypted);
+//
+//        return decrypted;
+//    }
 }

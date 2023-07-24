@@ -8,6 +8,10 @@ package com.mycompany.enhancedcrypto;
  *
  * @author ntu-user
  */
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -24,6 +28,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -52,7 +57,27 @@ public class EnhancedAESApp extends Application {
         ciphertextArea = new TextArea();
         keyArea = new TextArea();
         decryptedArea = new TextArea();
-
+        //code for file handling
+        
+        
+//          Button encryptButton = new Button("Encrypt");
+//    encryptButton.setOnAction(e -> {
+//        try {
+//            encryptFile();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    });
+//
+//    Button decryptButton = new Button("Decrypt");
+//    decryptButton.setOnAction(e -> {
+//        try {
+//            decryptFile();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    });
+//old code =======================================
         Button encryptButton = new Button("Encrypt");
         encryptButton.setOnAction(e -> encrypt());
 
@@ -107,6 +132,77 @@ public class EnhancedAESApp extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    private void encryptFile() throws Exception {
+    String key = keyArea.getText();
+    byte[] keyBytes = key.getBytes();
+
+    FileChooser fileChooser = new FileChooser();
+    File selectedFile = fileChooser.showOpenDialog(null);
+
+    if (selectedFile != null) {
+        try {
+            byte[] fileData = readBytesFromFile(selectedFile);
+          
+
+            // Perform encryption using EnhancedAES.encrypt() method
+            byte[] ciphertext = EnhancedAES.encrypt(fileData, keyBytes);
+             // Convert the encrypted data to base64-encoded string
+             String base64EncryptedData = Base64.getEncoder().encodeToString(ciphertext);
+
+            // Print the base64-encoded content of the encrypted file
+            System.out.println("Encrypted File Content (Base64): " + base64EncryptedData);
+            // Write the encrypted data to a new file
+            File outputFile = new File(selectedFile.getParent(), "encrypted_" + selectedFile.getName());
+            writeBytesToFile(ciphertext, outputFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+    
+    private void decryptFile() throws Exception {
+    String key = keyArea.getText();
+    byte[] keyBytes = key.getBytes();
+
+    FileChooser fileChooser = new FileChooser();
+    File selectedFile = fileChooser.showOpenDialog(null);
+
+    if (selectedFile != null) {
+        try {
+            byte[] fileData = readBytesFromFile(selectedFile);
+
+            // Perform decryption using EnhancedAES.decrypt() method
+            byte[] decryptedBytes = EnhancedAES.decrypt(fileData, keyBytes);
+            // Convert the decrypted data to base64-encoded string
+            String base64DecryptedData = Base64.getEncoder().encodeToString(decryptedBytes);
+
+            // Print the base64-encoded content of the decrypted file
+            System.out.println("Decrypted File Content (Base64): " + base64DecryptedData);
+            // Write the decrypted data to a new file
+            File outputFile = new File(selectedFile.getParent(), "decrypted_" + selectedFile.getName());
+            writeBytesToFile(decryptedBytes, outputFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+    
+    // Helper method to read bytes from a file
+private byte[] readBytesFromFile(File file) throws IOException {
+    byte[] fileData;
+    try (FileInputStream fis = new FileInputStream(file)) {
+        fileData = fis.readAllBytes();
+    }
+    return fileData;
+}
+
+// Helper method to write bytes to a file
+private void writeBytesToFile(byte[] data, File file) throws IOException {
+    try (FileOutputStream fos = new FileOutputStream(file)) {
+        fos.write(data);
+    }
+}
+
 
     private void encrypt() {
         String plaintext = plaintextArea.getText();
