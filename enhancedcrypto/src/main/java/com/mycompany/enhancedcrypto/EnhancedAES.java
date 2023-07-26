@@ -1,3 +1,4 @@
+
 package com.mycompany.enhancedcrypto;
 import javax.crypto.*;
 import javax.crypto.spec.*;
@@ -91,6 +92,8 @@ public class EnhancedAES {
 
     return decrypted;
 }
+
+//=========================================================================================
 //    public static byte[] decrypt(byte[] ciphertext, byte[] key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 //        SecretKey secretKey = expandKey(key);
 //
