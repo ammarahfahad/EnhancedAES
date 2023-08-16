@@ -16,7 +16,7 @@ import java.util.Arrays;
 public class AESComparisonTest {
     public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
         // Test data
-        byte[] plaintext = "Hello, World!".getBytes();
+        byte[] plaintext = "£$$%%^$^£$^£^£".getBytes();
         byte[] key = generateRandomKey();
 
         // Encrypt with EnhancedAES

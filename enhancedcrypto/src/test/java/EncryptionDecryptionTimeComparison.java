@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class EncryptionDecryptionTimeComparison {
     public static void main(String[] args) {
-        byte[] plaintext = "Hello world".getBytes(StandardCharsets.UTF_8);
+        byte[] plaintext = "My JAVA CODE ".getBytes(StandardCharsets.UTF_8);
         //byte[] plaintext = generateRandomData(1024 * 1024); // 1 MB of data
         byte[] key = generateRandomKey();
 

@@ -14,7 +14,7 @@ public class BruteForceTester {
 
         // Generate all possible keys (2^32 combinations)
  byte[] key = new byte[16];
-long totalKeys = (1L << 32); // 2^32 combinations
+long totalKeys = (1L << 20); // 2^32 combinations
 long progressInterval = totalKeys / 100; // Print progress for every 1% completion
 
 for (long i = 0; i < totalKeys; i++) {
