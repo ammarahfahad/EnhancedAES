@@ -38,6 +38,14 @@ public class Main {
             byte[] decryptedText = EnhancedAES.decrypt(ciphertext, key);
             String decryptedString = new String(decryptedText, StandardCharsets.UTF_8);
             System.out.println("Decrypted Text: " + decryptedString);
+            // Encrypt the plaintext using the original AES algorithm
+            byte[] ciphertext1 = OriginalAES.encrypt(plaintextBytes, key);
+            System.out.println("Ciphertext from original aes: " + bytesToHex(ciphertext1));
+
+            // Decrypt the ciphertext using the enhanced AES algorithm
+            byte[] decryptedText1 = OriginalAES.decrypt(ciphertext1, key);
+            String decryptedString1 = new String(decryptedText1, StandardCharsets.UTF_8);
+            System.out.println("Decrypted Text from original aes: " + decryptedString1);
         } catch (Exception e) {
             e.printStackTrace();
         }

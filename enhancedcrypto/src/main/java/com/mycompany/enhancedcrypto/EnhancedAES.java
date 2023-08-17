@@ -1,8 +1,11 @@
 package com.mycompany.enhancedcrypto;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import javax.crypto.*;
 import javax.crypto.spec.*;
 import java.security.*;
+import java.util.Arrays;
 
 public class EnhancedAES {
 
@@ -59,21 +62,28 @@ public class EnhancedAES {
     }
 
     public static byte[] encrypt(byte[] plaintext, byte[] key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
-        SecretKey secretKey = expandKey(key);
+          SecretKey secretKey = expandKey(key);
 
+    // Use AES/CBC mode with PKCS5 padding for encryption
+    Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+    byte[] iv = new byte[16]; // 16 bytes IV for CBC
+    IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+    cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivParameterSpec);
+
+    byte[] encrypted;
+    
+    try {
         // Apply substitution and permutation before encryption
         substitute(plaintext);
         permute(plaintext);
 
-        // Use AES/CBC mode with PKCS5 padding for encryption
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        byte[] iv = new byte[16]; // 16 bytes IV for CBC
-        IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivParameterSpec);
+        encrypted = cipher.doFinal(plaintext);
+    } finally {
+        // Clear sensitive data from memory
+        Arrays.fill(plaintext, (byte) 0);
+    }
 
-        byte[] ciphertext = cipher.doFinal(plaintext);
-
-        return ciphertext;
+    return encrypted;
     }
 
     public static byte[] decrypt(byte[] ciphertext, byte[] key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {

@@ -16,8 +16,9 @@ import java.util.Arrays;
 public class AESComparisonTest {
     public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
         // Test data
-        byte[] plaintext = "£$$%%^$^£$^£^£".getBytes();
-        byte[] key = generateRandomKey();
+        //byte[] plaintext = "£$$%%^$^£$^£^£".getBytes();
+         byte[] plaintext = generateRandomData(1024 * 1024);
+         byte[] key = generateRandomKey();
 
         // Encrypt with EnhancedAES
         byte[] enhancedCiphertext = EnhancedAES.encrypt(plaintext, key);
@@ -43,15 +44,22 @@ public class AESComparisonTest {
         System.out.println("OriginalAES: " + originalEntropyIndex + "%");
     }
 
-    private static byte[] generateRandomKey() {
-        byte[] key = new byte[32];
+    private static byte[] generateRandomKey() throws NoSuchAlgorithmException {
+       // byte[] key = new byte[32];
         // Generate a random key
         // Replace this with your own key generation logic
         // For demonstration purposes, a random key is used here
-        new SecureRandom().nextBytes(key);
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+            keyGenerator.init(128);
+            SecretKey secretKey = keyGenerator.generateKey();
+            byte[] key = secretKey.getEncoded();
         return key;
     }
-
+private static byte[] generateRandomData(int size) {
+        byte[] data = new byte[size];
+        new SecureRandom().nextBytes(data);
+        return data;
+    }
     private static double calculateAvalancheEffect(byte[] plaintext, byte[] ciphertext) {
         int count = plaintext.length * 8;
         int differentBits = 0;
